@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <head>
+    <title>Multi-Agent Build Plans — Workflow Outlines</title>
+  </head>
+  <body>
+    <outline text="Plan A — Claude Code builds; Codex reviews">
+      <outline text="1. Codex creates a clear, testable feature brief"/>
+      <outline text="2. Claude Code builds on a feature/... branch, small clear commits"/>
+      <outline text="3. Deploy to staging (CI/CD, manual push, or PR preview)"/>
+      <outline text="4-5. Parallel reviews of staging">
+        <outline text="4. Codex — read-only technical review"/>
+        <outline text="5. Antigravity/Gemini — read-only UX/CRO review"/>
+      </outline>
+      <outline text="6. Codex PM combines and prioritizes verified findings"/>
+      <outline text="7. Claude Code applies one batch of approved fixes, retests staging"/>
+      <outline text="8. Owner approves before merge to main and production deploy"/>
+    </outline>
+    <outline text="Plan B — Codex builds; Claude Code reviews">
+      <outline text="1. Codex creates a clear, testable feature brief"/>
+      <outline text="2. Codex builds on a feature/... branch, small clear commits"/>
+      <outline text="3. Deploy to staging (CI/CD, manual push, or PR preview)"/>
+      <outline text="4-5. Parallel reviews of staging">
+        <outline text="4. Claude Code — read-only technical review"/>
+        <outline text="5. Antigravity/Gemini — read-only UX/CRO review"/>
+      </outline>
+      <outline text="6. Codex PM combines and prioritizes verified findings"/>
+      <outline text="7. Codex applies one batch of approved fixes, retests staging"/>
+      <outline text="8. Owner approves before merge to main and production deploy"/>
+    </outline>
+    <outline text="Plan C — Antigravity builds; Codex and Claude Code review">
+      <outline text="1. Codex creates a clear, testable feature brief"/>
+      <outline text="2. Antigravity/Gemini builds on a feature/... branch, small clear commits"/>
+      <outline text="3. Deploy to staging (CI/CD, manual push, or PR preview)"/>
+      <outline text="4-5. Parallel technical reviews of staging (no separate UX/CRO pass in this plan)">
+        <outline text="4. Codex — read-only technical review"/>
+        <outline text="5. Claude Code — read-only code review"/>
+      </outline>
+      <outline text="6. Codex PM combines and prioritizes verified findings from both reviewers"/>
+      <outline text="7. Antigravity/Gemini applies one batch of approved fixes, retests staging"/>
+      <outline text="8. Owner approves before merge to main and production deploy"/>
+    </outline>
+  </body>
+</opml>

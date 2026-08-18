@@ -57,6 +57,8 @@ Do not assume an internal tool, Google Cloud service, or Gemini workspace is int
 
 ## Build plans
 
+Every plan below assumes step 1 ("Codex creates a clear, testable feature brief") is built from a completed **Feature intake brief** (see [Handoff brief requirement](#handoff-brief-requirement)) — the owner answers it once, up front, and the PM does not begin Plan A/B/C until it's filled in.
+
 ### Plan A — Claude Code builds; Codex reviews
 
 1. Codex creates a clear, testable feature brief.
@@ -95,6 +97,21 @@ Do not assume an internal tool, Google Cloud service, or Gemini workspace is int
 
 ---
 
+## Workflow outlines (OPML)
+
+[`build-plans.opml`](./build-plans.opml) contains the same Plan A/B/C steps above as a nested outline — one top-level branch per plan, with the two concurrent review steps nested as siblings under a shared "parallel reviews" parent since they happen at the same time, not in sequence. Open it in any OPML-aware outliner (e.g., OmniOutliner, Dynalist, WorkFlowy import, or a feed reader) for a collapsible, visual version of each plan instead of reading the numbered lists above. It extends the same way if a Plan D is ever added.
+
+---
+
+## Model and reviewer economics
+
+- **Builder**: use the strongest reasoning-tier model available for this role. Ambiguous or creative decisions are the most expensive to get wrong here — a bad architectural or design call cascades into rework across every downstream review and fix cycle. Don't economize on the builder to save cost.
+- **Reviewers**: a lighter or faster model tier is usually adequate, since reviewing is closer to "check against explicit criteria" than "generate novel work" — but only when the review brief gives a concrete checklist (see **Standardized findings format**) rather than an open-ended "look for problems" prompt.
+- **Two independent reviewers**: assign them different lenses instead of the same generalist pass twice — e.g., one on functional/technical correctness, the other on UX/visual/design consistency (matching the existing **Independent technical-review** and **UX/CRO-review** instructions above). Two reviewers running the same checklist buy overlapping coverage, not two independent nets.
+- A model reviewing its own build tends to anchor on its own prior reasoning and under-report its own mistakes. The value of a second reviewer comes from independence, not from using a "smarter" model — a correctly-briefed lighter model that didn't write the code will still catch things the builder's self-review won't.
+
+---
+
 ## Primary objective
 
 Deliver the current feature safely and efficiently. Keep the builder and reviewer independent. Use staging as the validation gate. Do not waste usage by repeatedly reviewing an unfinished feature or by running multiple editors against the same branch.
@@ -113,6 +130,7 @@ Deliver the current feature safely and efficiently. Keep the builder and reviewe
 8. Never merge to `main`, publish, or deploy to production without the owner's explicit approval.
 9. If a fix pass breaks staging, stop the release path. Revert the feature branch or staging deployment to the last known stable commit before attempting a different solution. Record what failed and why before retrying.
 10. Allow a maximum of two combined fix passes per feature. If confirmed findings remain after the second pass, pause the loop and ask the owner to choose: accept the remaining risk, change the design, narrow the scope, or continue with another pass.
+11. The owner should batch a feature's related requests into one complete brief before the builder starts, rather than issuing a sequence of small follow-up corrections once work is underway. Each correction after implementation has begun costs a full cycle — re-reading current state, re-implementing, redeploying, reverifying — so five sequential tweaks cost roughly five cycles' worth of usage where one consolidated spec would have cost one. (Example: "move this section's background to A, then actually to B, then back to A but scoped to only part of it" is five cycles; "put pattern X on section A and a different pattern Y on section B's heading only" is one.) When part of the scope is genuinely undecided, flag it as an open question in the brief rather than letting the builder guess and correcting after the fact.
 
 ---
 
@@ -206,7 +224,28 @@ All reviewers — technical and UX/CRO — must return findings in this table fo
 
 ## Handoff brief requirement
 
-Before handing work to any reviewer, the Codex project manager must produce one copy-paste-ready Markdown brief. Use the appropriate template below. Do not ask reviewers to infer missing context from an earlier conversation. Keep the brief concise, factual, and free of secrets.
+Before starting any build, or handing work to any reviewer, the Codex project manager must produce one copy-paste-ready Markdown brief. Use the appropriate template below. Do not ask builders or reviewers to infer missing context from an earlier conversation. Keep the brief concise, factual, and free of secrets.
+
+### Feature intake brief (Owner → PM/Builder)
+
+Answered once, by the owner, before Plan A/B/C begins — see the note at the top of **Build plans**. Each field exists to prevent a specific category of rework: an unstated exact value gets guessed and redone; an unstated scope boundary gets over- or under-built; an unstated combined spec arrives as a string of costly one-at-a-time corrections instead of one pass.
+
+```markdown
+### Feature Intake
+
+- **Feature:** [Name]
+- **Definition of done:** [Specific URL/screen, behavior, or acceptance criterion — link a reference image/site if one exists]
+- **Exact scope — in:** [File/section/element this touches]
+- **Exact scope — out:** [What must explicitly NOT change]
+- **Fixed values (if any):** [Colors/hex, fonts, spacing already decided — leave blank if the builder should propose]
+- **Pattern:** [Match existing component X / needs its own distinct treatment — if distinct, distinct from Y and Z]
+- **Environments/variants to cover:** [Themes, breakpoints, dark mode, every page it appears on]
+- **Blast radius:** [OK to touch shared components — / must be contained to the above scope only]
+- **Reuse before recreate:** [Existing icons/tokens/components that should be reused]
+- **Combined spec:** [If this request has multiple parts, all of them, together — not staged one at a time]
+- **Verification:** [Owner will check live at (URL) — / builder should self-verify via (method) before reporting done]
+- **Explicitly deferred:** [Anything adjacent that should NOT be built right now]
+```
 
 ### Technical review request brief (PM → Technical reviewer)
 
