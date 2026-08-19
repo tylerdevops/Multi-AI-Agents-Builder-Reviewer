@@ -131,6 +131,7 @@ Deliver the current feature safely and efficiently. Keep the builder and reviewe
 9. If a fix pass breaks staging, stop the release path. Revert the feature branch or staging deployment to the last known stable commit before attempting a different solution. Record what failed and why before retrying.
 10. Allow a maximum of two combined fix passes per feature. If confirmed findings remain after the second pass, pause the loop and ask the owner to choose: accept the remaining risk, change the design, narrow the scope, or continue with another pass.
 11. The owner should batch a feature's related requests into one complete brief before the builder starts, rather than issuing a sequence of small follow-up corrections once work is underway. Each correction after implementation has begun costs a full cycle — re-reading current state, re-implementing, redeploying, reverifying — so five sequential tweaks cost roughly five cycles' worth of usage where one consolidated spec would have cost one. (Example: "move this section's background to A, then actually to B, then back to A but scoped to only part of it" is five cycles; "put pattern X on section A and a different pattern Y on section B's heading only" is one.) When part of the scope is genuinely undecided, flag it as an open question in the brief rather than letting the builder guess and correcting after the fact.
+12. Every builder session ends with one entry appended to `CHANGELOG.md` before the branch is handed to a reviewer or the PM. Never edit a past entry — see `CHANGELOG.md` for format and rules.
 
 ---
 
@@ -142,6 +143,7 @@ Deliver the current feature safely and efficiently. Keep the builder and reviewe
 4. Run relevant local checks and staging validation.
 5. Commit in small logical units with clear messages.
 6. Report changed files, tests performed, remaining risk, and the staging status.
+7. Append one entry to `CHANGELOG.md` per the format defined there — what was attempted, key decisions, anything ruled out, and open questions for the next agent. Do not edit or remove any existing entry.
 
 ---
 
@@ -159,6 +161,8 @@ Inspect the current feature branch and relevant surrounding code read-only. Repo
 - Deployment or configuration assumptions
 
 Use the **standardized findings format** below. Mark uncertainty as a question, not a defect. Do not change files.
+
+Consult the last 10 entries in `CHANGELOG.md` for context on why prior decisions were made — treat it as background, not as a source of findings. A gap or contradiction in the changelog itself can be logged as a `Q` (question), but the review is still of the code, not the log.
 
 ---
 
@@ -215,9 +219,10 @@ All reviewers — technical and UX/CRO — must return findings in this table fo
 3. Confirm Antigravity's access configuration (visual tooling, read-only scope).
 4. Do not begin review while an active build or uncommitted changes make the result unstable.
 5. Collect the technical and UX/CRO reports (both must use the standardized findings format).
+5a. Confirm the builder appended a CHANGELOG.md entry for this session before proceeding. If missing, request it before starting the review cycle — reviewers and future agents shouldn't have to reconstruct reasoning from the diff alone.
 6. Deduplicate findings across reports and distinguish confirmed issues, questions, and optional improvements.
 7. Produce one prioritized fix list for the original builder using the **consolidated fix list template**.
-8. Verify staging validation after the fix pass.
+8. Verify staging validation after the fix pass. If CHANGELOG.md has passed ~30 entries, archive everything older than the most recent 15 into `changelog/archive/[YYYY-MM].md` and update the archive pointer at the top of the Entries section.
 9. Present the owner with a short release summary and ask for approval before production.
 
 ---
