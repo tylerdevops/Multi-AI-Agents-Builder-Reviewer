@@ -132,6 +132,7 @@ Deliver the current feature safely and efficiently. Keep the builder and reviewe
 10. Allow a maximum of two combined fix passes per feature. If confirmed findings remain after the second pass, pause the loop and ask the owner to choose: accept the remaining risk, change the design, narrow the scope, or continue with another pass.
 11. The owner should batch a feature's related requests into one complete brief before the builder starts, rather than issuing a sequence of small follow-up corrections once work is underway. Each correction after implementation has begun costs a full cycle — re-reading current state, re-implementing, redeploying, reverifying — so five sequential tweaks cost roughly five cycles' worth of usage where one consolidated spec would have cost one. (Example: "move this section's background to A, then actually to B, then back to A but scoped to only part of it" is five cycles; "put pattern X on section A and a different pattern Y on section B's heading only" is one.) When part of the scope is genuinely undecided, flag it as an open question in the brief rather than letting the builder guess and correcting after the fact.
 12. Every builder session ends with one entry appended to `CHANGELOG.md` before the branch is handed to a reviewer or the PM. Never edit a past entry — see `CHANGELOG.md` for format and rules.
+13. The documentation standard defined in [tylerdevops/Documentation-Prompt-for-AI](https://github.com/tylerdevops/Documentation-Prompt-for-AI) governs how the *target website project* being built under Plan A/B/C is documented — see **Documentation standard** below. It applies to the project being delivered, not to this prompt-template repo itself.
 
 ---
 
@@ -143,7 +144,19 @@ Deliver the current feature safely and efficiently. Keep the builder and reviewe
 4. Run relevant local checks and staging validation.
 5. Commit in small logical units with clear messages.
 6. Report changed files, tests performed, remaining risk, and the staging status.
-7. Append one entry to `CHANGELOG.md` per the format defined there — what was attempted, key decisions, anything ruled out, and open questions for the next agent. Do not edit or remove any existing entry.
+7. Before handoff, run `/documentthisweb` (see **Documentation standard** below) against the target website project so its own README, style guide, changelog, components guide, security checklist, dashboard, and asset map stay current with the feature just built.
+8. Append one entry to `CHANGELOG.md` per the format defined there — what was attempted, key decisions, anything ruled out, and open questions for the next agent. Do not edit or remove any existing entry.
+
+---
+
+## Documentation standard
+
+The target website project delivered under Plan A/B/C should carry its own documentation, kept current as features land — not produced once at the end. This repo defers to [tylerdevops/Documentation-Prompt-for-AI](https://github.com/tylerdevops/Documentation-Prompt-for-AI) for that standard rather than redefining it here.
+
+- **Claude Code / Cowork:** this repo ships the toolkit's web skill at [`.claude/skills/documentthisweb/SKILL.md`](.claude/skills/documentthisweb/SKILL.md) (invoked as `/documentthisweb`). It inspects the target project's source, previews the planned documentation, waits for owner approval, then produces the companion docs listed below. (`.claude/skills/documentthis/SKILL.md` is a deprecated stub that redirects to it.) The toolkit also ships macOS and Windows variants for native (non-web) targets — pull `documentthisMacOS` or `documentthisWindows` from the source repo if a build plan ever targets a native app instead of a website.
+- **Any other assistant:** copy the prompt from that repo's [`templates/DOCUMENTATION-PROMPT.md`](https://github.com/tylerdevops/Documentation-Prompt-for-AI/blob/main/templates/DOCUMENTATION-PROMPT.md) into Codex, Antigravity/Gemini, or whichever tool is acting as builder.
+- **What it produces, scoped to the target project's real source:** an expanded README, `STYLEGUIDE.md`, `CHANGELOG.md`, `COMPONENTS.md`, `SECURITYCHECK.md`, `DASHBOARD.md`, a repo-hygiene check, and native source comments — plus an accessibility/security pass and a testing checklist.
+- This standard applies to the *target website project*, which keeps its own copies of these files. It is independent of this repo's own `CHANGELOG.md` (operating rule 12), which records the *meta-process* of building this prompt template, not the delivered site.
 
 ---
 
@@ -359,10 +372,11 @@ At the end of each feature, provide:
 7. **UX/CRO findings:** Full findings table with disposition (fixed / deferred / rejected with reason)
 8. **Fix passes used:** [1 / 2] of 2 maximum
 9. **Remaining risks:** Open items, deferred work, and known limitations
-10. **Production approval status:** Approved / Pending / Blocked — with owner decision
+10. **Documentation status:** Confirmation `/documentthisweb` (or the platform equivalent) ran against the target project and which companion docs it updated
+11. **Production approval status:** Approved / Pending / Blocked — with owner decision
 
 ---
 
 ## Short version
 
-> Codex is project manager. Use **Plan A** (Claude builds, Codex reviews), **Plan B** (Codex builds, Claude reviews), or **Plan C** (Antigravity builds, Codex + Claude review). Antigravity/Gemini is a read-only UX/CRO specialist on stable staging unless selected as builder in Plan C. One builder edits at a time; reviewers remain read-only. All findings use a standardized table format (ID, severity, area, evidence, action). Review committed, stable work; combine verified findings into one fix pass with a structured fix list; retest on staging; never merge to `main` or deploy production without the owner's explicit approval. Maximum two fix passes per feature.
+> Codex is project manager. Use **Plan A** (Claude builds, Codex reviews), **Plan B** (Codex builds, Claude reviews), or **Plan C** (Antigravity builds, Codex + Claude review). Antigravity/Gemini is a read-only UX/CRO specialist on stable staging unless selected as builder in Plan C. One builder edits at a time; reviewers remain read-only. All findings use a standardized table format (ID, severity, area, evidence, action). Review committed, stable work; combine verified findings into one fix pass with a structured fix list; retest on staging; document the target project per the [Documentation-Prompt-for-AI](https://github.com/tylerdevops/Documentation-Prompt-for-AI) standard before handoff; never merge to `main` or deploy production without the owner's explicit approval. Maximum two fix passes per feature.
