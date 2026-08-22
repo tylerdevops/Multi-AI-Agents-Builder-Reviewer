@@ -41,3 +41,12 @@ _(Populated by the PM once the first archive is created — e.g. "Entries before
 **Decisions made:** Append-only, one entry per session rather than per commit — avoids merge conflicts when two agents touch the file around the same time, and keeps the log at "decision" granularity instead of "diff" granularity.
 **Ruled out:** A structured JSON/YAML log — rejected because it's harder for an agent to skim for context mid-session and adds parsing overhead this repo's scale doesn't need.
 **Open questions / left for next agent:** The 30-entry archive threshold is a guess — revisit once real usage shows how fast this file actually grows.
+
+## 2026-08-21 — Claude Code — Wire in Documentation-Prompt-for-AI standard
+**Branch:** `main` | **Commit(s):** `[fill in on commit]`
+**Files touched:** `README.md`, `.claude/skills/documentthisweb/SKILL.md`, `.claude/skills/documentthis/SKILL.md`
+
+**What/why:** Owner asked to use [tylerdevops/Documentation-Prompt-for-AI](https://github.com/tylerdevops/Documentation-Prompt-for-AI) for this project's documentation process. Wired it in the same way CHANGELOG.md was wired in previously: a new operating rule (13), a builder-instructions step (7) to run `/documentthisweb` before handoff, a new **Documentation standard** section explaining scope, and a line in the Final report format and Short version. Vendored the `documentthisweb` and deprecated `documentthis` stub skill files from that repo into `.claude/skills/` so the command is available without a separate clone.
+**Decisions made:** Scoped the standard to the *target website project* being built under Plan A/B/C, not this prompt-template repo itself — this repo already has its own `CHANGELOG.md`/README process, and conflating the two would blur which artifact the standard governs. Only vendored the web skill (not macOS/Windows) since every build plan here targets a website; noted in the README where to pull the native variants from if that ever changes.
+**Ruled out:** Adding the source repo as a git submodule — the toolkit's own README already recommends copying just the relevant skill folder(s) for consuming projects, and a submodule adds update/sync overhead this small, stable prompt template doesn't need.
+**Open questions / left for next agent:** If a future Plan A/B/C build targets a native macOS/Windows app instead of a website, pull `documentthisMacOS`/`documentthisWindows` from the source repo into `.claude/skills/` at that time.
