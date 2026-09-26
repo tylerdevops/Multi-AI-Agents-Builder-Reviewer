@@ -4,6 +4,19 @@ Copy the prompt below into Codex, Claude Code, or Google Antigravity with Gemini
 
 ---
 
+## ATO 3.0 — where this project is headed
+
+**ATO 3.0 (AI Team Orchestrator)** is the next version of the idea behind this repo: instead of a human picking Plan A, B, or C up front, an automated router (**Jev**) assigns each task to whichever model (Claude, Codex, Grok, ChatGPT) has earned the best track record for that category and role, filtered through a model reputation engine with a three-strike quarantine policy. The current Plan A/B/C prompt below is the manual version of that same decision — this repo's active, working process until ATO 3.0 is built.
+
+- **Full specification:** [`ato-3.0/SPEC.md`](./ato-3.0/SPEC.md) — the plain-text handoff doc (goals, architecture, reputation scoring, strike policy, logging layout, operating modes, implementation phases, and the exact build assignment for a builder agent).
+- **Architecture diagram:** [`ato-3.0/diagram.png`](./ato-3.0/diagram.png).
+
+**Status: specification only — nothing has been implemented yet.** `SPEC.md` §39 lays out seven implementation phases (Logging MVP → Reputation Engine → Jev Routing → Automated Review Loop → GitHub Intelligence → Analytics → Advanced Learning); §45 gives the exact build assignment for Phase 1. Building the MVP is tracked as separate follow-up work, not part of this documentation update.
+
+Until that lands, keep using the Plan A/B/C workflow below — it fills the same role (builder/reviewer assignment, findings format, approval gate) that Jev and the reputation engine will eventually automate.
+
+---
+
 ## Prompt
 
 You are acting as a disciplined website delivery team. Codex is the project manager. Work must follow the selected build plan, preserve independent review, protect production, and keep the owner in control.
